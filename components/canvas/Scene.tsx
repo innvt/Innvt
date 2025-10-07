@@ -35,7 +35,7 @@ export default function Scene() {
         alpha: true,
         powerPreference: 'high-performance', // Request high-performance GPU
       }}
-      dpr={[1, 2]} // Adaptive pixel ratio
+      dpr={1} // Fixed pixel ratio - use CSS pixels only, ignore device DPR
       performance={{ min: 0.5 }} // Allow quality reduction if needed
     >
       <Suspense fallback={null}>

@@ -13,7 +13,7 @@
  * - Achieves 60 FPS with 50,000 particles on M1 Max
  */
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { SceneProps } from './types';
@@ -28,15 +28,17 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
     super({
       uniforms: {
         uTime: { value: 0 },
-        uSize: { value: 1.2 },           // Base size: 1.2px (will be adjusted by DPR in shader)
-        uPixelRatio: { value: Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2) }, // DPR for cross-display consistency
-        uNoiseScale: { value: 0.15 },    // Kept at 0.15 - smooth motion
-        uNoiseSpeed: { value: 0.05 },    // Reduced: 0.05 for 50% slower, calmer motion
-        uNoiseStrength: { value: 0.7 },  // Kept at 0.7 for gentle displacement
+        uSize: { value: 1.3923 },        // Increased by 20%: 1.16025 * 1.2 = 1.3923
+        uViewportWidth: { value: typeof window !== 'undefined' ? window.innerWidth : 1920 }, // Viewport width for responsive scaling
+        uPixelRatio: { value: 1.0 },     // Always 1.0 - ignore device pixel ratio, use CSS pixels only
+        uNoiseScale: { value: 0.15 },    // Smooth motion
+        uNoiseSpeed: { value: 0.05 },    // Slow, calmer motion
+        uNoiseStrength: { value: 0.7 },  // Gentle displacement
       },
       vertexShader: `
         uniform float uTime;
         uniform float uSize;
+        uniform float uViewportWidth;
         uniform float uPixelRatio;
         uniform float uNoiseScale;
         uniform float uNoiseSpeed;
@@ -68,11 +70,14 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
           vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
           vDistance = length(mvPosition.xyz);
 
-          // CROSS-DISPLAY FIX: Divide by pixel ratio for consistent visual size
-          // On Retina (DPR=2): 1.2 / 2 = 0.6 screen pixels = 0.3 CSS pixels
-          // On Standard (DPR=1): 1.2 / 1 = 1.2 screen pixels = 1.2 CSS pixels
-          // Result: Same visual size across all displays
-          gl_PointSize = (uSize / uPixelRatio) * (50.0 / -mvPosition.z);
+          // Responsive particle size - scales with viewport width
+          // Reference: 1920px viewport = 1.0x scale
+          // Smaller screens get proportionally smaller particles
+          // Larger screens get proportionally larger particles
+          float viewportScale = uViewportWidth / 1920.0;
+          float responsiveSize = uSize * viewportScale;
+
+          gl_PointSize = responsiveSize * (50.0 / -mvPosition.z);
 
           gl_Position = projectionMatrix * mvPosition;
         }
@@ -93,20 +98,26 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
           // Discard pixels outside circle
           if (dist > 0.5) discard;
 
-          // SHARPER particle edges - tighter smoothstep range for crisp definition
-          float alpha = 1.0 - smoothstep(0.1, 0.5, dist);
-          alpha = pow(alpha, 2.0); // Increased power for sharper falloff
+          // MAXIMUM SHARPNESS - 30% sharper edges
+          float alpha = 1.0 - smoothstep(0.0, 0.35, dist); // Even tighter range (0.38 * 0.92 ≈ 0.35)
+          alpha = pow(alpha, 9.1); // 30% higher power: 7.0 * 1.3 = 9.1
 
           // Quantum-inspired color gradient (blue to purple)
           float colorMix = (vPosition.z * 0.05 + 0.5 + vRandomOffset * 0.2);
           colorMix = clamp(colorMix, 0.0, 1.0);
 
-          vec3 color1 = vec3(0.267, 0.533, 1.0);   // #4488ff (blue)
-          vec3 color2 = vec3(0.533, 0.267, 1.0);   // #8844ff (purple)
+          // Vibrant blue and purple base colors
+          vec3 color1 = vec3(0.4, 0.7, 1.0);   // Bright blue
+          vec3 color2 = vec3(0.7, 0.4, 1.0);   // Bright purple
           vec3 color = mix(color1, color2, colorMix);
 
-          // REDUCED brightness for better cross-display balance
-          color *= 1.05; // Subtle boost (5%) - prevents over-brightness on standard displays
+          // Boost brightness FIRST - 30% brighter
+          color *= 2.145; // 30% increase: 1.65 * 1.3 = 2.145
+
+          // THEN add strong white core (after brightness, to avoid overflow)
+          float coreWhite = 1.0 - smoothstep(0.0, 0.25, dist); // Larger core: 25% of particle
+          coreWhite = pow(coreWhite, 2.0); // Moderate falloff for smooth gradient
+          color = mix(color, vec3(1.0), coreWhite * 0.85); // Mix 85% white for strong core
 
           // Add subtle pulsing
           float pulse = sin(uTime * 2.0 + vRandomOffset * 10.0) * 0.1 + 0.9;
@@ -116,16 +127,10 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
           float distanceFade = 1.0 - smoothstep(10.0, 50.0, vDistance);
           alpha *= distanceFade;
 
-          // CROSS-DISPLAY FIX: Compensate opacity for particle area differences
-          // Particle area scales with (1/DPR)²
-          // Retina (DPR=2): Area = 1/4, so multiply opacity by 4 (2²)
-          // Standard (DPR=1): Area = 1, so multiply opacity by 1 (1²)
-          // This ensures same total brightness regardless of display type
-          float opacityCompensation = uPixelRatio * uPixelRatio;
-
-          // Base opacity: 0.1375 (25% less transparent than 0.11)
-          // 0.11 * 1.25 = 0.1375 for better visibility on Retina displays
-          gl_FragColor = vec4(color, alpha * 0.1375 * opacityCompensation);
+          // Base opacity: 0.468 for brighter particles (0.36 * 1.3 = 0.468, 30% brighter)
+          // Additive blending naturally handles particle overlap
+          // No manual DPR compensation needed - renderer handles it
+          gl_FragColor = vec4(color, alpha * 0.468);
         }
       `,
       transparent: true,
@@ -183,6 +188,38 @@ export function QuantumField({ particleCount, isActive }: SceneProps) {
 
   // Create material
   const material = useMemo(() => new QuantumParticleMaterial(), []);
+
+  // Keep uPixelRatio at 1.0 - we ignore device pixel ratio and use CSS pixels only
+  // This ensures consistent rendering based on window size, not display type
+  useEffect(() => {
+    if (!material) return;
+
+    // Always set to 1.0 to ignore DPR
+    if (material.uniforms.uPixelRatio) {
+      material.uniforms.uPixelRatio.value = 1.0;
+    }
+  }, [material]);
+
+  // Update viewport width on resize for responsive particle sizing
+  useEffect(() => {
+    if (typeof window === 'undefined' || !material) return;
+
+    const updateViewportWidth = () => {
+      if (material.uniforms.uViewportWidth) {
+        material.uniforms.uViewportWidth.value = window.innerWidth;
+      }
+    };
+
+    // Initial update
+    updateViewportWidth();
+
+    // Listen for window resize
+    window.addEventListener('resize', updateViewportWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateViewportWidth);
+    };
+  }, [material]);
 
   // Animation loop - ALWAYS animate, regardless of isActive
   useFrame((state) => {

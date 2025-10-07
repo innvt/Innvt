@@ -60,7 +60,7 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
   1: {
     tier: 1,
     particleCount: {
-      quantum: 5000,
+      quantum: 15000,      // Increased by 5000 more (was 10000)
       atomic: 10,
       molecular: 100,
       solar: 10,
@@ -82,7 +82,7 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
   2: {
     tier: 2,
     particleCount: {
-      quantum: 30000,
+      quantum: 40000,      // Increased by 5000 more (was 35000)
       atomic: 10,
       molecular: 200,
       solar: 15,
@@ -104,7 +104,7 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
   3: {
     tier: 3,
     particleCount: {
-      quantum: 13500,  // Fine-tuned: 10% reduction from 15000 for optimal comfort
+      quantum: 23500,  // Increased by 5000 more (was 18500)
       atomic: 10,
       molecular: 500,
       solar: 20,

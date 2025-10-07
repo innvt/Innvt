@@ -60,7 +60,7 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
     const quantumTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: '#hero',
-        start: 'top top',
+        start: 'top bottom', // Start immediately when hero enters viewport
         end: 'bottom top',
         scrub: true,
         onEnter: () => {
@@ -74,7 +74,7 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
     });
 
     quantumTimeline
-      .to(camera.position, { z: 5, duration: 0.5 })
+      .to(camera.position, { z: 10, duration: 1 }, 0) // Start zooming out immediately from z:5 to z:10
       .to(
         sceneGroupRefs.current[ScaleLevel.QUANTUM]?.scale || {},
         { x: 1, y: 1, z: 1, duration: 0.3 },
@@ -82,8 +82,8 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
       )
       .to(
         sceneGroupRefs.current[ScaleLevel.QUANTUM]?.scale || {},
-        { x: 0, y: 0, z: 0, duration: 0.3 },
-        0.7
+        { x: 0, y: 0, z: 0, duration: 0.5 },
+        0.5
       );
 
     // Scene 2: Atomic Dance (Phase 1 - Genesis)
