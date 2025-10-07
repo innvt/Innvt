@@ -29,21 +29,24 @@ export default function Hero() {
 
   return (
     <section
+      id="hero"
       ref={heroRef}
       className="relative min-h-screen flex items-center justify-center px-6"
     >
       <div className="hero-content text-center max-w-5xl mx-auto">
-        {/* Logo/Brand Name */}
+        {/* Logo/Brand Name - Pure White */}
         <div className="mb-12">
-          <h1 className="text-8xl md:text-9xl font-bold tracking-tight">
-            <span className="gradient-text">Innvt</span>
+          <h1 className="text-8xl md:text-9xl font-bold tracking-tight text-white">
+            Innvt
           </h1>
         </div>
 
-        {/* Tagline */}
+        {/* Tagline - Gradient Gold */}
         <div className="mb-10">
-          <h2 className="text-hero font-bold mb-8">Build Beyond.</h2>
-          <p className="text-xl md:text-2xl text-foreground-secondary max-w-3xl mx-auto leading-relaxed">
+          <h2 className="text-hero font-bold mb-8 gradient-gold">
+            Build Beyond.
+          </h2>
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed gradient-gold">
             Build Beyond is more than our tagline; it is our operational mandate.
           </p>
         </div>

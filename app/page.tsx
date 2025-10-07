@@ -79,7 +79,7 @@ export default function Home() {
           <div className="container mx-auto px-6">
             <div className="mb-20 text-center">
               <h2 className="text-section font-bold mb-6">Our Evolution</h2>
-              <p className="text-xl text-foreground-tertiary max-w-3xl mx-auto">
+              <p className="text-xl max-w-3xl mx-auto gradient-gold">
                 A journey through four transformative phases, each building upon the last to
                 create a sustainable future for all.
               </p>
@@ -98,7 +98,7 @@ export default function Home() {
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-subsection font-bold mb-8">Our Belief</h2>
-              <blockquote className="text-2xl md:text-3xl font-light italic text-foreground-secondary leading-relaxed">
+              <blockquote className="text-2xl md:text-3xl font-light italic leading-relaxed gradient-gold">
                 &ldquo;When we plant a tree, plant it in a desert, not in a forest, then there is
                 a meaning for the word &lsquo;shade&rsquo;.&rdquo;
               </blockquote>

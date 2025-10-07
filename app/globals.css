@@ -5,7 +5,16 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
-  --accent: #e18638;
+
+  /* Champagne Gold - Primary Accent Color */
+  --accent-default: #d4af37;
+  --accent-light: #f4e4c1;
+  --accent-dark: #b8941e;
+  --gradient-start: #d4af37;
+  --gradient-end: #f4e4c1;
+  --glow-light: rgba(212, 175, 55, 0.3);
+  --glow-strong: rgba(212, 175, 55, 0.6);
+  --accent-rgb: 212, 175, 55;
 }
 
 * {
@@ -83,21 +92,29 @@ body {
   z-index: 1;
 }
 
-/* Gradient text */
+/* Gradient text - Champagne Gold gradient */
 .gradient-text {
-  background: linear-gradient(135deg, #e18638 0%, #e17a38 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Glow effect */
+/* Gradient gold utility class for all accent text */
+.gradient-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effect - Uses dynamic color theme */
 .glow {
-  box-shadow: 0 0 20px rgba(225, 134, 56, 0.3);
+  box-shadow: 0 0 20px var(--glow-light);
 }
 
 .glow-strong {
-  box-shadow: 0 0 40px rgba(225, 134, 56, 0.6);
+  box-shadow: 0 0 40px var(--glow-strong);
 }
 
 /* Loading state */

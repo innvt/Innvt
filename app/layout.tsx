@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import SmoothScroll from '@/components/shared/SmoothScroll';
+import { GPUDetectionProvider } from '@/components/shared/GPUDetectionProvider';
 
 export const metadata: Metadata = {
   title: 'Innvt - Build Beyond',
@@ -47,8 +48,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="antialiased">
-        <SmoothScroll>{children}</SmoothScroll>
-        <div className="noise-overlay" aria-hidden="true" />
+        <GPUDetectionProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+          <div className="noise-overlay" aria-hidden="true" />
+        </GPUDetectionProvider>
       </body>
     </html>
   );
