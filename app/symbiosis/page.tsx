@@ -9,7 +9,7 @@ export default function SymbiosisPage() {
       <div className="container mx-auto px-6 py-20">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-accent hover:text-accent-light transition-colors mb-12"
+          className="inline-flex items-center gap-2 mb-12 gradient-gold"
         >
           <ArrowLeft size={20} />
           Back to Home
@@ -17,8 +17,10 @@ export default function SymbiosisPage() {
 
         <div className="max-w-4xl">
           <div className="mb-8">
-            <p className="text-accent font-semibold mb-4">Phase 3</p>
-            <h1 className="text-hero font-bold mb-6 gradient-text">Symbiosis</h1>
+            <p className="font-semibold mb-4 gradient-gold">
+              Phase 3
+            </p>
+            <h1 className="text-hero font-bold mb-6 gradient-gold">Symbiosis</h1>
             <p className="text-xl text-foreground-secondary leading-relaxed">
               Engineering the system for a thriving world.
             </p>

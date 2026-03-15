@@ -111,26 +111,42 @@ npm run dev
 - Parallax effects
 - Particle field background
 
+## 🌌 Quantum to Cosmic Journey
+
+A scientifically grounded, artistic visualization of the universe across 6 scales of magnitude.
+
+### Current Status: Week 2 Complete (Scale 2: Atomic Dance) ✅
+
+We are currently building the "Quantum to Cosmic" journey. The first two scales are implemented and fully functional.
+
+| Scale | Status | Description |
+|-------|--------|-------------|
+| **1. Quantum Field** | ✅ Complete | Planck scale fluctuations, quarks, and gluons. (Hero Section) |
+| **2. Atomic Dance** | ✅ Complete | Bohr model atoms with orbiting electrons. (Phase 1) |
+| **3. Molecular Network** | 🚧 Next | Atoms bonding to form complex molecules. (Phase 2) |
+| **4. Solar System** | ⏳ Planned | Planetary orbits and gravitational harmony. (Phase 3) |
+| **5. Galactic Expanse** | ⏳ Planned | Spiral galaxies and cosmic dust. (Phase 4) |
+| **6. Cosmic Web** | ⏳ Planned | The large-scale structure of the universe. (Belief Section) |
+
+### Documentation
+- **[Start Here](START_HERE.md)**: Guide to the research and validation behind this project.
+- **[Roadmap](IMPLEMENTATION_ROADMAP.md)**: Detailed implementation plan and timeline.
+- **Archive**: Historical status reports and research notes can be found in `docs/archive/`.
+
 ## 🌟 Features
 
 ### Implemented
-- ✅ Smooth scrolling with Lenis
-- ✅ 3D particle field background
-- ✅ GSAP scroll animations
-- ✅ Responsive design
-- ✅ Dark theme
-- ✅ Four phase pages
-- ✅ Interactive hover effects
-- ✅ Mouse-based camera movement
+- ✅ **Scale Transition System**: Smooth, scroll-based morphing between scales.
+- ✅ **Performance Optimized**: GPU-based particle systems (100k+ particles).
+- ✅ **Device Adaptation**: Automatic quality adjustment for mobile/desktop.
+- ✅ **Visuals**: Custom shaders for glowing particles and orbital mechanics.
+- ✅ **Smooth Scrolling**: Lenis integration for fluid navigation.
 
 ### Planned
-- 🔲 Custom cursor
-- 🔲 Page transitions
-- 🔲 Advanced 3D scenes per phase
-- 🔲 Shader effects
-- 🔲 Sound design
-- 🔲 Loading animations
-- 🔲 Mobile optimizations
+- 🔲 **Molecular Interactions**: Dynamic bond formation.
+- 🔲 **Cosmic Scale**: Procedural galaxy generation.
+- 🔲 **Audio**: Ambient soundscapes for each scale.
+
 
 ## 📖 Brand Information
 

@@ -20,9 +20,9 @@ const config: Config = {
           tertiary: '#a3a3a3',
         },
         accent: {
-          DEFAULT: '#e18638',
-          light: '#e17a38',
-          dark: '#c76f2f',
+          DEFAULT: 'var(--accent-default)',  // Dynamic color theme
+          light: 'var(--accent-light)',      // Hover states
+          dark: 'var(--accent-dark)',        // Pressed states
         },
         border: {
           DEFAULT: '#262626',
@@ -53,8 +53,8 @@ const config: Config = {
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         glow: {
-          '0%': { boxShadow: '0 0 20px rgba(225, 134, 56, 0.3)' },
-          '100%': { boxShadow: '0 0 40px rgba(225, 134, 56, 0.6)' },
+          '0%': { boxShadow: '0 0 20px var(--glow-light)' },   // Dynamic color theme
+          '100%': { boxShadow: '0 0 40px var(--glow-strong)' }, // Dynamic color theme
         },
       },
       backgroundImage: {
