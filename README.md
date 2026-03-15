@@ -1,73 +1,100 @@
 # Innvt - Build Beyond
 
-A futuristic, visually stunning brand experience website built with Next.js 15, React Three Fiber, GSAP, and Lenis smooth scrolling.
+A futuristic, visually stunning brand experience website built with Next.js 15, React Three Fiber, GSAP, and Lenis smooth scrolling. The site features a **Quantum to Cosmic** scale journey — a scientifically grounded, artistic visualization of the universe across 6 scales of magnitude, all driven by scroll-based particle morphing.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 ### Core Framework
-- **Next.js 15** - React framework with App Router
-- **React 19** - UI library
-- **TypeScript** - Type safety and better DX
+- **Next.js 15** — React framework with App Router
+- **React 19** — UI library
+- **TypeScript** — Type safety and better DX
 
 ### 3D Graphics & WebGL
-- **Three.js** - 3D graphics library
-- **React Three Fiber** - React renderer for Three.js
-- **@react-three/drei** - Useful helpers for R3F
-- **@react-three/postprocessing** - Post-processing effects
+- **Three.js** — 3D graphics library
+- **React Three Fiber** — React renderer for Three.js
+- **@react-three/drei** — Useful helpers for R3F
+- **Custom GLSL Shaders** — Vertex/fragment shaders for particle systems, orbital mechanics, and morphing transitions
 
 ### Animation
-- **GSAP 3** - Professional-grade animation library
-- **@gsap/react** - React wrapper for GSAP
-- **ScrollTrigger** - Scroll-based animations
-- **Framer Motion** - React animation library
+- **GSAP 3** — Professional-grade animation library
+- **ScrollTrigger** — Scroll-driven transitions between scales
+- **Framer Motion** — React animation library for UI elements
 
 ### Smooth Scrolling
-- **Lenis** - Smooth scroll library
+- **Lenis** — Smooth scroll library with scroll position persistence
 
 ### Styling
-- **Tailwind CSS** - Utility-first CSS framework
-- **Geist Font** - Modern font family
+- **Tailwind CSS** — Utility-first CSS framework
+- **Geist Font** — Modern font family
 
-### Development Tools
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
-- **TypeScript** - Static type checking
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 innvt-website/
-├── app/                          # Next.js App Router
-│   ├── layout.tsx               # Root layout with metadata
-│   ├── page.tsx                 # Homepage
-│   ├── globals.css              # Global styles
-│   ├── genesis/                 # Phase 1 page
-│   ├── cultivation/             # Phase 2 page
-│   ├── symbiosis/               # Phase 3 page
-│   └── horizon/                 # Phase 4 page
+├── app/                              # Next.js App Router
+│   ├── layout.tsx                   # Root layout with metadata
+│   ├── page.tsx                     # Homepage — Scale Journey
+│   ├── globals.css                  # Global styles
+│   ├── genesis/                     # Phase 1 page
+│   ├── cultivation/                 # Phase 2 page
+│   ├── symbiosis/                   # Phase 3 page
+│   └── horizon/                     # Phase 4 page
 ├── components/
-│   ├── canvas/                  # React Three Fiber components
-│   │   ├── Scene.tsx           # Main 3D scene
-│   │   ├── ParticleField.tsx   # Particle system
-│   │   └── CameraController.tsx # Camera controls
-│   ├── dom/                     # Regular React components
-│   │   ├── Hero.tsx            # Hero section
-│   │   └── PhaseSection.tsx    # Phase card component
-│   └── shared/                  # Shared components
-│       └── SmoothScroll.tsx    # Lenis smooth scroll wrapper
-├── hooks/                       # Custom React hooks
-│   ├── useScrollAnimation.ts   # Scroll animation hook
-│   └── useMousePosition.ts     # Mouse tracking hook
-├── lib/                         # Utility functions
-│   ├── animations.ts           # GSAP animation utilities
-│   └── three-utils.ts          # Three.js helper functions
-└── public/                      # Static assets
+│   ├── canvas/
+│   │   └── Scene.tsx               # Main 3D scene container
+│   ├── dom/
+│   │   ├── Hero.tsx                # Hero section with tagline
+│   │   └── PhaseSection.tsx        # Phase card component
+│   ├── scenes/                      # Scale journey scenes
+│   │   ├── ScaleJourneyManager.tsx  # Orchestrates all transitions via ScrollTrigger
+│   │   ├── QuantumField.tsx         # Scale 1: Quantum fluctuations (Hero)
+│   │   ├── CinematicAtom.tsx        # Scale 2: Single Bohr atom (transition)
+│   │   ├── AtomicDanceMulti.tsx     # Scale 2: Multi-atom dance (Phase 1)
+│   │   ├── MolecularNetwork.tsx     # Scale 3: Molecular bonds (Phase 2)
+│   │   ├── OrbitalHarmony.tsx       # Scale 4: Solar system (Phase 3)
+│   │   ├── GalacticExpanse.tsx      # Scale 5: Spiral galaxy → tree morph (Phase 4)
+│   │   ├── CosmicWeb.tsx            # Scale 6: Cosmic web (Belief)
+│   │   └── types.ts                 # Shared TypeScript types
+│   └── shared/
+│       ├── SmoothScroll.tsx         # Lenis wrapper with scroll restoration
+│       ├── GPUDetectionProvider.tsx  # GPU capability detection
+│       └── WebGLErrorBoundary.tsx   # WebGL error handling
+├── lib/
+│   ├── scene-constants.ts           # Shared constants across scenes
+│   ├── particle-morphing.ts         # Particle position/morph utilities
+│   ├── atomic-elements.ts           # Atomic element data and geometry
+│   ├── orbital-components.tsx       # Solar system planet/ring components
+│   ├── gpu-detection.ts             # GPU tier detection logic
+│   ├── performance-monitor.ts       # Runtime performance monitoring
+│   └── shaders/
+│       └── noise.glsl.ts            # Shared noise functions for shaders
+└── public/                           # Static assets
 ```
 
-## 🛠️ Getting Started
+## Quantum to Cosmic Journey
+
+The homepage features a continuous scroll-driven journey through 6 scales of the universe. Each scale is a GPU-accelerated particle system (50k–100k+ particles) that morphs seamlessly into the next via custom GLSL shaders.
+
+| Scale | Scene | Description |
+|-------|-------|-------------|
+| **1. Quantum Field** | `QuantumField.tsx` | Planck-scale fluctuations — particles fade out on scroll transition |
+| **2. Atomic Dance** | `CinematicAtom.tsx` → `AtomicDanceMulti.tsx` | Bohr model atoms with orbiting electrons |
+| **3. Molecular Network** | `MolecularNetwork.tsx` | Atoms bonding into complex molecular structures |
+| **4. Solar System** | `OrbitalHarmony.tsx` | Planetary orbits with rings, moons, and sun corona (30° viewing angle) |
+| **5. Galactic Expanse** | `GalacticExpanse.tsx` | Spiral galaxy that morphs into a rounded deciduous tree |
+| **6. Cosmic Web** | `CosmicWeb.tsx` | Large-scale structure of the universe |
+
+### Key Technical Features
+- **Particle morphing**: Staggered `smoothstep` per particle using seeded random offsets for organic transitions
+- **Scroll-driven animation**: GSAP ScrollTrigger controls all transition progress via refs (no React state)
+- **Scroll restoration**: Browser back button returns to exact scroll position using `sessionStorage`
+- **ScrollTrigger lifecycle**: Custom `lenis-ready` event ensures ScrollTriggers re-initialize after navigation
+- **GPU adaptation**: Automatic quality scaling based on detected GPU capabilities
+
+## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
@@ -86,13 +113,14 @@ npm run dev
 
 ### Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run format` - Format code with Prettier
+- `npm run dev` — Start development server
+- `npm run build` — Build for production
+- `npm run start` — Start production server
+- `npm run lint` — Run ESLint
 
-## 🎨 Design System
+> **Note**: Inline GLSL shader string changes do not hot-reload — a full dev server restart is required after modifying shaders.
+
+## Design System
 
 ### Colors
 - **Background**: `#000000` (Pure black)
@@ -105,68 +133,25 @@ npm run dev
 - **Section**: Clamp(2rem, 5vw, 4rem)
 - **Subsection**: Clamp(1.5rem, 3vw, 2.5rem)
 
-### Animations
-- Smooth scroll with Lenis
-- GSAP-powered transitions
-- Parallax effects
-- Particle field background
-
-## 🌌 Quantum to Cosmic Journey
-
-A scientifically grounded, artistic visualization of the universe across 6 scales of magnitude.
-
-### Current Status: Week 2 Complete (Scale 2: Atomic Dance) ✅
-
-We are currently building the "Quantum to Cosmic" journey. The first two scales are implemented and fully functional.
-
-| Scale | Status | Description |
-|-------|--------|-------------|
-| **1. Quantum Field** | ✅ Complete | Planck scale fluctuations, quarks, and gluons. (Hero Section) |
-| **2. Atomic Dance** | ✅ Complete | Bohr model atoms with orbiting electrons. (Phase 1) |
-| **3. Molecular Network** | 🚧 Next | Atoms bonding to form complex molecules. (Phase 2) |
-| **4. Solar System** | ⏳ Planned | Planetary orbits and gravitational harmony. (Phase 3) |
-| **5. Galactic Expanse** | ⏳ Planned | Spiral galaxies and cosmic dust. (Phase 4) |
-| **6. Cosmic Web** | ⏳ Planned | The large-scale structure of the universe. (Belief Section) |
-
-### Documentation
-- **[Start Here](START_HERE.md)**: Guide to the research and validation behind this project.
-- **[Roadmap](IMPLEMENTATION_ROADMAP.md)**: Detailed implementation plan and timeline.
-- **Archive**: Historical status reports and research notes can be found in `docs/archive/`.
-
-## 🌟 Features
-
-### Implemented
-- ✅ **Scale Transition System**: Smooth, scroll-based morphing between scales.
-- ✅ **Performance Optimized**: GPU-based particle systems (100k+ particles).
-- ✅ **Device Adaptation**: Automatic quality adjustment for mobile/desktop.
-- ✅ **Visuals**: Custom shaders for glowing particles and orbital mechanics.
-- ✅ **Smooth Scrolling**: Lenis integration for fluid navigation.
-
-### Planned
-- 🔲 **Molecular Interactions**: Dynamic bond formation.
-- 🔲 **Cosmic Scale**: Procedural galaxy generation.
-- 🔲 **Audio**: Ambient soundscapes for each scale.
-
-
-## 📖 Brand Information
+## Brand Information
 
 ### Tagline
-**Build Beyond.**
+**Build Beyond**
 
 ### Vision
-To create a thriving, sustainable world where every being feels at home - on Earth and beyond.
+To create a thriving, sustainable world where every being feels at home — on Earth and beyond.
 
 ### Mission
 To architect the foundational tools and systems that empower humanity to solve its greatest challenges and consciously shape its future.
 
 ### Four Phases
 
-1. **Genesis** - Architecting the tools for a new reality
-2. **Cultivation** - Creating the space for potential to build
-3. **Symbiosis** - Engineering the system for a thriving world
-4. **Horizon** - Building beyond our known frontier
+1. **Genesis** — Architecting the tools for a new reality
+2. **Cultivation** — Creating the space for potential to build
+3. **Symbiosis** — Engineering the system for a thriving world
+4. **Horizon** — Building beyond our known frontier
 
-## 🚀 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 ```bash
@@ -181,47 +166,19 @@ The project can be deployed to any platform that supports Next.js:
 - Cloudflare Pages
 - Railway
 
-## 📝 Development Guidelines
+## Development Guidelines
 
-### Code Style
 - Use TypeScript for type safety
-- Follow ESLint rules
-- Format code with Prettier
-- Use meaningful variable names
-- Comment complex logic
-
-### Component Guidelines
 - Keep components small and focused
-- Use custom hooks for reusable logic
 - Separate 3D (canvas) and 2D (dom) components
-- Use proper TypeScript types
+- Use GSAP for scroll-driven animations, Framer Motion for UI animations
+- Always clean up animations and event listeners in useEffect
+- Use refs (not React state) for high-frequency animation values
 
-### Animation Guidelines
-- Use GSAP for complex animations
-- Use Framer Motion for simple UI animations
-- Always clean up animations in useEffect
-- Use ScrollTrigger for scroll-based animations
-
-## 🤝 Contributing
-
-1. Create a feature branch
-2. Make your changes
-3. Run linting and formatting
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
+## License
 
 Copyright © 2025 Innvt. All rights reserved.
 
-## 🙏 Acknowledgments
-
-- Next.js team for the amazing framework
-- Poimandres for React Three Fiber
-- GreenSock for GSAP
-- Studio Freight for Lenis
-
 ---
 
-**Built with ❤️ by Innvt**
-
+**Built with passion by Innvt**
