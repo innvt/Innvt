@@ -18,9 +18,8 @@
  * All transition state is ref-based — no React re-renders during scroll.
  */
 
-import { useRef, Suspense, useMemo } from 'react';
+import { useRef, Suspense, useMemo, useEffect, useState, useCallback } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
-import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
@@ -42,7 +41,7 @@ import OrbitalHarmony from './OrbitalHarmony';
 import GalacticExpanse from './GalacticExpanse';
 
 // Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(ScrollTrigger);
 
 interface ScaleJourneyManagerProps {
   enableTransitions?: boolean;
@@ -98,8 +97,16 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
   const solarNodes = useMemo(() => generateSolarTargets(), []);
   const galaxyNodes = useMemo(() => generateGalacticTargets(), []);
 
+  // Re-create ScrollTriggers when Lenis re-initializes (e.g. after back navigation)
+  const [triggerKey, setTriggerKey] = useState(0);
+  useEffect(() => {
+    const handler = () => setTriggerKey(k => k + 1);
+    window.addEventListener('lenis-ready', handler);
+    return () => window.removeEventListener('lenis-ready', handler);
+  }, []);
+
   // Set up per-section ScrollTriggers
-  useGSAP(() => {
+  const createScrollTriggers = useCallback(() => {
     if (!enableTransitions) return;
 
     // Hero section: QuantumField visible, camera zooms 5 → 10
@@ -244,7 +251,16 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
         cameraZRef.current = 50;
       },
     });
-  }, [enableTransitions, camera]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableTransitions]);
+
+  // Create and clean up ScrollTriggers
+  useEffect(() => {
+    createScrollTriggers();
+    return () => {
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
+  }, [triggerKey, createScrollTriggers]);
 
   // useFrame: update camera + group visibility from refs
   useFrame(() => {

@@ -68,6 +68,10 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
 
     gsap.ticker.lagSmoothing(0);
 
+    // Notify other components that Lenis has re-initialized
+    // (e.g., ScaleJourneyManager needs to re-create ScrollTriggers)
+    window.dispatchEvent(new Event('lenis-ready'));
+
     // Cleanup
     return () => {
       clearTimeout(saveTimeout);
