@@ -19,6 +19,7 @@ export interface QualitySettings {
     galactic: number;
     cosmic: number;
   };
+  atomCount: number;  // Number of atoms for multi-atom atomic scene
   postProcessing: boolean;
   shadowQuality: 'none' | 'low' | 'medium' | 'high';
   particleSize: 'small' | 'medium' | 'large';
@@ -45,6 +46,7 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
       galactic: 0,
       cosmic: 0,
     },
+    atomCount: 0,  // No atoms for fallback
     postProcessing: false,
     shadowQuality: 'none',
     particleSize: 'small',
@@ -67,6 +69,7 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
       galactic: 10000,
       cosmic: 5000,
     },
+    atomCount: 75,  // 50-100 range for Tier 1
     postProcessing: false,
     shadowQuality: 'none',
     particleSize: 'small',
@@ -89,13 +92,14 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
       galactic: 50000,
       cosmic: 30000,
     },
+    atomCount: 250,  // 200-300 range for Tier 2
     postProcessing: false,
     shadowQuality: 'low',
     particleSize: 'medium',
     useWebGL: true,
     use2DFallback: false,
     maxFPS: 60,
-    enableBloom: false,
+    enableBloom: true,
     enableGlow: true,
     shaderComplexity: 'medium',
   },
@@ -104,13 +108,14 @@ const QUALITY_PRESETS: Record<QualityTier, QualitySettings> = {
   3: {
     tier: 3,
     particleCount: {
-      quantum: 23500,  // Increased by 5000 more (was 18500)
+      quantum: 50000,
       atomic: 10,
       molecular: 500,
       solar: 20,
       galactic: 100000,
       cosmic: 50000,
     },
+    atomCount: 750,  // 500-1,000 range for Tier 3
     postProcessing: true,
     shadowQuality: 'high',
     particleSize: 'large',

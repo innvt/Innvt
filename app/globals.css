@@ -15,6 +15,11 @@
   --glow-light: rgba(212, 175, 55, 0.3);
   --glow-strong: rgba(212, 175, 55, 0.6);
   --accent-rgb: 212, 175, 55;
+
+  /* Border & secondary text colors (match Tailwind config) */
+  --border: #262626;
+  --border-light: #404040;
+  --foreground-secondary: #e5e5e5;
 }
 
 * {
@@ -24,7 +29,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior handled by Lenis smooth scroll */
 }
 
 body {
@@ -56,7 +61,7 @@ body {
 
 /* Selection */
 ::selection {
-  background-color: var(--accent);
+  background-color: var(--accent-default);
   color: #000000;
 }
 
@@ -106,6 +111,16 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Text readability glow for text over bright 3D backgrounds */
+.text-glow {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+}
+
+/* Lighter glow for secondary/body text */
+.text-glow-soft {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
 /* Glow effect - Uses dynamic color theme */

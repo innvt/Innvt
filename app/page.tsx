@@ -9,11 +9,49 @@ import Scene from '@/components/canvas/Scene';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const phases = [
+  {
+    id: 'phase-1',
+    phaseNumber: 1,
+    phaseName: 'Genesis',
+    title: 'Genesis',
+    description:
+      'Architecting the tools for a new reality. The is the Origin; the creation of the first spark; igniting the core in the void that will pull an entire system into orbit.',
+    href: '/genesis',
+  },
+  {
+    id: 'phase-2',
+    phaseNumber: 2,
+    phaseName: 'Cultivation',
+    title: 'Cultivation',
+    description:
+      'Creating the environment for potential. Forging the connections that empower others to build their own tools - A journey of growth, learning, and empowerment.',
+    href: '/cultivation',
+  },
+  {
+    id: 'phase-3',
+    phaseNumber: 3,
+    phaseName: 'Symbiosis',
+    title: 'Symbiosis',
+    description:
+      'Engineering the system for a thriving world. The individual elements now orbit together as a vast self-sustaining ecosystem; a state of perfect balance and mutual benefit.',
+    href: '/symbiosis',
+  },
+  {
+    id: 'phase-4',
+    phaseNumber: 4,
+    phaseName: 'Horizon',
+    title: 'Horizon',
+    description:
+      'Building beyond our known frontier. Transcending our own systems to explore the infinite; reaching the limit of what is possible today, and finding the relentless drive to build beyond.',
+    href: '/horizon',
+  },
+];
+
 export default function Home() {
   const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Initialize GSAP animations
     const ctx = gsap.context(() => {
       // Fade in animation on load
       gsap.from('.hero-content', {
@@ -25,43 +63,61 @@ export default function Home() {
       });
     }, mainRef);
 
-    return () => ctx.revert();
-  }, []);
+    // Section snapping via RAF polling of Lenis velocity
+    const sectionIds = ['hero', 'evolution', 'phase-1', 'phase-2', 'phase-3', 'phase-4', 'belief-section'];
+    let isSnapping = false;
+    let wasScrolling = false;
+    let rafId: number;
 
-  const phases = [
-    {
-      id: 'genesis',
-      title: 'Genesis',
-      subtitle: 'Phase 1',
-      description:
-        'Architecting the tools for a new reality. The Origin; the creation of the first spark; planting the seeds in the desert from which everything else will grow.',
-      href: '/genesis',
-    },
-    {
-      id: 'cultivation',
-      title: 'Cultivation',
-      subtitle: 'Phase 2',
-      description:
-        'Creating the space for potential to build. Nurturing the seeds into a sapling; the process of growth, learning, and empowerment; tending to the new life.',
-      href: '/cultivation',
-    },
-    {
-      id: 'symbiosis',
-      title: 'Symbiosis',
-      subtitle: 'Phase 3',
-      description:
-        'Engineering the system for a thriving world. The seeds are now a forest, creating a self-sustaining ecosystem; a state of perfect balance and mutual benefit.',
-      href: '/symbiosis',
-    },
-    {
-      id: 'horizon',
-      title: 'Horizon',
-      subtitle: 'Phase 4',
-      description:
-        'Building beyond our known frontier. Looking up from the forest to the stars; the limit of what we can see, and the drive to go beyond it; the next, endless frontier.',
-      href: '/horizon',
-    },
-  ];
+    const snapToNearest = () => {
+      const lenis = (window as any).__lenis;
+      if (!lenis || isSnapping) return;
+
+      const scrollY = lenis.scroll;
+      const vh = window.innerHeight;
+      const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+
+      let closestSection: HTMLElement | null = null;
+      let closestDist = Infinity;
+
+      sections.forEach((section) => {
+        const dist = Math.abs(scrollY - section.offsetTop);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestSection = section;
+        }
+      });
+
+      if (closestSection && closestDist > 5 && closestDist < vh * 0.45) {
+        isSnapping = true;
+        lenis.scrollTo(closestSection, {
+          duration: 0.5,
+          onComplete: () => {
+            isSnapping = false;
+          },
+        });
+      }
+    };
+
+    // Poll Lenis velocity — when scrolling stops, snap
+    const tick = () => {
+      const lenis = (window as any).__lenis;
+      if (lenis) {
+        const scrolling = Math.abs(lenis.velocity) > 0.1;
+        if (wasScrolling && !scrolling && !isSnapping) {
+          snapToNearest();
+        }
+        wasScrolling = scrolling;
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+
+    return () => {
+      ctx.revert();
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   return (
     <main ref={mainRef} className="relative">
@@ -74,27 +130,31 @@ export default function Home() {
       <div className="content-wrapper">
         <Hero />
 
-        {/* Phases Section */}
-        <section className="relative py-32">
-          <div className="container mx-auto px-6">
-            <div className="mb-20 text-center">
-              <h2 className="text-section font-bold mb-6">Our Evolution</h2>
-              <p className="text-xl max-w-3xl mx-auto gradient-gold">
-                A journey through four transformative phases, each building upon the last to
-                create a sustainable future for all.
-              </p>
-            </div>
-
-            <div className="space-y-32">
-              {phases.map((phase, index) => (
-                <PhaseSection key={phase.id} phase={phase} index={index} />
-              ))}
-            </div>
+        {/* Evolution Intro Section */}
+        <section
+          id="evolution"
+          className="relative min-h-screen flex items-end justify-center px-6 pb-16"
+        >
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-section font-bold mb-6 text-glow">Our Evolution</h2>
+            <p className="text-xl max-w-3xl mx-auto gradient-gold text-glow-soft">
+              A journey through four transformative phases, each building upon the last
+              to create a sustainable future for all.
+            </p>
           </div>
         </section>
 
+        {/* Phase Sections */}
+        {phases.map((phase) => (
+          <PhaseSection key={phase.id} {...phase} />
+        ))}
+
         {/* Belief Section */}
-        <section className="relative py-32 border-t border-border">
+        <section
+          id="belief-section"
+          className="relative border-t border-border flex items-end pb-16"
+          style={{ minHeight: '100vh' }}
+        >
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-subsection font-bold mb-8">Our Belief</h2>
@@ -109,4 +169,3 @@ export default function Home() {
     </main>
   );
 }
-

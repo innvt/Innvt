@@ -13,7 +13,7 @@
  * - Achieves 60 FPS with 50,000 particles on M1 Max
  */
 
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, type MutableRefObject } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { SceneProps } from './types';
@@ -34,6 +34,7 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
         uNoiseScale: { value: 0.15 },    // Smooth motion
         uNoiseSpeed: { value: 0.05 },    // Slow, calmer motion
         uNoiseStrength: { value: 0.7 },  // Gentle displacement
+        uTransitionProgress: { value: 0 }, // 0 = fully visible, 1 = transitioned away
       },
       vertexShader: `
         uniform float uTime;
@@ -43,13 +44,24 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
         uniform float uNoiseScale;
         uniform float uNoiseSpeed;
         uniform float uNoiseStrength;
+        uniform float uTransitionProgress;
 
         attribute vec3 aInitialPosition;
         attribute float aRandomOffset;
 
+        // Morph target attributes (optional)
+        attribute vec3 aTargetPosition;
+        attribute float aTargetType;  // 0 = electron, 1 = nucleus
+        attribute float aOrbitalRadius;
+        attribute float aOrbitalSpeed;
+        attribute float aOrbitalOffset;
+        attribute float aOrbitalTilt;
+
         varying vec3 vPosition;
         varying float vDistance;
         varying float vRandomOffset;
+        varying float vTransitionProgress;
+        varying float vTargetType;
 
         ${curlNoise}
 
@@ -63,8 +75,12 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
 
           pos += displacement;
 
+          // No position morph — particles stay in place and fade out
+
           vPosition = pos;
           vRandomOffset = aRandomOffset;
+          vTransitionProgress = uTransitionProgress;
+          vTargetType = aTargetType;
 
           // Transform to view space
           vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
@@ -83,56 +99,56 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
         }
       `,
       fragmentShader: `
-        uniform float uTime;
-        uniform float uPixelRatio;
+            uniform float uTime;
+            uniform float uPixelRatio;
 
-        varying vec3 vPosition;
-        varying float vDistance;
-        varying float vRandomOffset;
+            varying vec3 vPosition;
+            varying float vDistance;
+            varying float vRandomOffset;
+            varying float vTransitionProgress;
+            varying float vTargetType;
 
-        void main() {
-          // Create circular particle shape
-          vec2 center = gl_PointCoord - 0.5;
-          float dist = length(center);
+            void main() {
+              // Create circular particle shape
+              vec2 center = gl_PointCoord - 0.5;
+              float dist = length(center);
 
-          // Discard pixels outside circle
-          if (dist > 0.5) discard;
+              // Discard pixels outside circle
+              if (dist > 0.5) discard;
 
-          // MAXIMUM SHARPNESS - 30% sharper edges
-          float alpha = 1.0 - smoothstep(0.0, 0.35, dist); // Even tighter range (0.38 * 0.92 ≈ 0.35)
-          alpha = pow(alpha, 9.1); // 30% higher power: 7.0 * 1.3 = 9.1
+              // --- QUANTUM MODE (Blue/Purple) ---
+              // MAXIMUM SHARPNESS - 30% sharper edges
+              float alphaQuantum = 1.0 - smoothstep(0.0, 0.35, dist);
+              alphaQuantum = pow(alphaQuantum, 9.1);
 
-          // Quantum-inspired color gradient (blue to purple)
-          float colorMix = (vPosition.z * 0.05 + 0.5 + vRandomOffset * 0.2);
-          colorMix = clamp(colorMix, 0.0, 1.0);
+              // Quantum-inspired color gradient (blue to purple)
+              float colorMix = (vPosition.z * 0.05 + 0.5 + vRandomOffset * 0.2);
+              colorMix = clamp(colorMix, 0.0, 1.0);
 
-          // Vibrant blue and purple base colors
-          vec3 color1 = vec3(0.4, 0.7, 1.0);   // Bright blue
-          vec3 color2 = vec3(0.7, 0.4, 1.0);   // Bright purple
-          vec3 color = mix(color1, color2, colorMix);
+              vec3 colorQuantum = mix(vec3(0.4, 0.7, 1.0), vec3(0.7, 0.4, 1.0), colorMix);
+              colorQuantum *= 2.145; // Boost brightness
 
-          // Boost brightness FIRST - 30% brighter
-          color *= 2.145; // 30% increase: 1.65 * 1.3 = 2.145
+              // Add strong white core
+              float coreWhite = 1.0 - smoothstep(0.0, 0.25, dist);
+              coreWhite = pow(coreWhite, 2.0);
+              colorQuantum = mix(colorQuantum, vec3(1.0), coreWhite * 0.85);
 
-          // THEN add strong white core (after brightness, to avoid overflow)
-          float coreWhite = 1.0 - smoothstep(0.0, 0.25, dist); // Larger core: 25% of particle
-          coreWhite = pow(coreWhite, 2.0); // Moderate falloff for smooth gradient
-          color = mix(color, vec3(1.0), coreWhite * 0.85); // Mix 85% white for strong core
+              // Add subtle pulsing
+              float pulse = sin(uTime * 2.0 + vRandomOffset * 10.0) * 0.1 + 0.9;
+              colorQuantum *= pulse;
 
-          // Add subtle pulsing
-          float pulse = sin(uTime * 2.0 + vRandomOffset * 10.0) * 0.1 + 0.9;
-          color *= pulse;
+              // Distance-based opacity
+              float distanceFade = 1.0 - smoothstep(10.0, 50.0, vDistance);
+              alphaQuantum *= distanceFade;
 
-          // Distance-based opacity (extended range for larger sphere)
-          float distanceFade = 1.0 - smoothstep(10.0, 50.0, vDistance);
-          alpha *= distanceFade;
 
-          // Base opacity: 0.468 for brighter particles (0.36 * 1.3 = 0.468, 30% brighter)
-          // Additive blending naturally handles particle overlap
-          // No manual DPR compensation needed - renderer handles it
-          gl_FragColor = vec4(color, alpha * 0.468);
-        }
-      `,
+              // --- FADE OUT during transition (no morph to atomic) ---
+              float fadeOut = 1.0 - smoothstep(0.0, 0.8, vTransitionProgress);
+              float finalAlpha = alphaQuantum * 0.468 * fadeOut;
+
+              gl_FragColor = vec4(colorQuantum, finalAlpha);
+            }
+          `,
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
@@ -141,18 +157,30 @@ class QuantumParticleMaterial extends THREE.ShaderMaterial {
   }
 }
 
-export function QuantumField({ particleCount, isActive }: SceneProps) {
-  const materialRef = useRef<QuantumParticleMaterial>(null);
+interface QuantumFieldProps extends SceneProps {
+  transitionProgress?: number;  // 0 = fully visible, 1 = transitioned to next scale
+  transitionProgressRef?: MutableRefObject<number>;
+  morphTargets?: {
+    targetPositions: Float32Array;
+    targetTypes: Float32Array;
+    orbitalRadii: Float32Array;
+    orbitalSpeeds: Float32Array;
+    orbitalOffsets: Float32Array;
+    orbitalTilts: Float32Array;
+  };
+}
+
+export function QuantumField({ particleCount, isActive: _isActive, transitionProgress = 0, transitionProgressRef, morphTargets }: QuantumFieldProps) {
   const pointsRef = useRef<THREE.Points>(null);
 
   // Create geometry with initial positions and random offsets
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
-    
+
     const positions = new Float32Array(particleCount * 3);
     const initialPositions = new Float32Array(particleCount * 3);
     const randomOffsets = new Float32Array(particleCount);
-    
+
     for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3;
 
@@ -178,16 +206,30 @@ export function QuantumField({ particleCount, isActive }: SceneProps) {
       // Random offset for variation
       randomOffsets[i] = Math.random() * 10.0;
     }
-    
+
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geo.setAttribute('aInitialPosition', new THREE.BufferAttribute(initialPositions, 3));
     geo.setAttribute('aRandomOffset', new THREE.BufferAttribute(randomOffsets, 1));
-    
+
     return geo;
   }, [particleCount]);
 
   // Create material
   const material = useMemo(() => new QuantumParticleMaterial(), []);
+
+  // Set morph target attributes when provided
+  useEffect(() => {
+    if (!morphTargets || !geometry) return;
+
+    console.log('[QuantumField] Setting morph targets for particle morphing');
+
+    geometry.setAttribute('aTargetPosition', new THREE.BufferAttribute(morphTargets.targetPositions, 3));
+    geometry.setAttribute('aTargetType', new THREE.BufferAttribute(morphTargets.targetTypes, 1));
+    geometry.setAttribute('aOrbitalRadius', new THREE.BufferAttribute(morphTargets.orbitalRadii, 1));
+    geometry.setAttribute('aOrbitalSpeed', new THREE.BufferAttribute(morphTargets.orbitalSpeeds, 1));
+    geometry.setAttribute('aOrbitalOffset', new THREE.BufferAttribute(morphTargets.orbitalOffsets, 1));
+    geometry.setAttribute('aOrbitalTilt', new THREE.BufferAttribute(morphTargets.orbitalTilts, 1));
+  }, [morphTargets, geometry]);
 
   // Keep uPixelRatio at 1.0 - we ignore device pixel ratio and use CSS pixels only
   // This ensures consistent rendering based on window size, not display type
@@ -227,10 +269,14 @@ export function QuantumField({ particleCount, isActive }: SceneProps) {
 
     const time = state.clock.elapsedTime;
     material.uniforms.uTime.value = time;
+
+    // Read live transition progress from ref (avoids stale closure from missing re-renders)
+    const tp = transitionProgressRef ? transitionProgressRef.current : transitionProgress;
+    material.uniforms.uTransitionProgress.value = tp;
   });
 
-  // Cleanup
-  useMemo(() => {
+  // Cleanup geometry and material on unmount
+  useEffect(() => {
     return () => {
       geometry.dispose();
       material.dispose();

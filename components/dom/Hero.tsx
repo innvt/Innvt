@@ -44,10 +44,10 @@ export default function Hero() {
         {/* Tagline - Gradient Gold */}
         <div className="mb-10">
           <h2 className="text-hero font-bold mb-8 gradient-gold">
-            Build Beyond.
+            Build Beyond
           </h2>
           <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed gradient-gold">
-            Build Beyond is more than our tagline; it is our operational mandate.
+            Build Beyond is more than just a tagline; it&apos;s our operational mandate.
           </p>
         </div>
       </div>

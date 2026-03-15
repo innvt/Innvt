@@ -8,7 +8,7 @@ import { GPUDetectionProvider } from '@/components/shared/GPUDetectionProvider';
 export const metadata: Metadata = {
   title: 'Innvt - Build Beyond',
   description:
-    'Build Beyond is more than our tagline; it is our operational mandate. We architect the foundational tools and systems that empower humanity to solve its greatest challenges.',
+    'Build Beyond is more than just a tagline; it\'s our operational mandate. We architect the foundational tools and systems that empower humanity to solve its greatest challenges.',
   keywords: [
     'innovation',
     'technology',
