@@ -251,7 +251,6 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
         cameraZRef.current = 50;
       },
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableTransitions]);
 
   // Create and clean up ScrollTriggers

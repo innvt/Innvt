@@ -23,29 +23,6 @@ function mulberry32(seed: number) {
   };
 }
 
-// Generate a point along a line segment with perpendicular noise
-function pointOnEdge(
-  a: [number, number, number],
-  b: [number, number, number],
-  t: number,
-  noise: number,
-  rand: () => number,
-): [number, number, number] {
-  const x = a[0] + (b[0] - a[0]) * t;
-  const y = a[1] + (b[1] - a[1]) * t;
-  const z = a[2] + (b[2] - a[2]) * t;
-
-  // Perpendicular offset in xz plane
-  const dx = b[0] - a[0];
-  const dy = b[1] - a[1];
-  const len = Math.sqrt(dx * dx + dy * dy) || 1;
-  const nx = -dy / len;
-  const ny = dx / len;
-  const offset = (rand() - 0.5) * noise;
-  const zOffset = (rand() - 0.5) * noise;
-
-  return [x + nx * offset, y + ny * offset, z + zOffset];
-}
 
 export default function GalacticExpanse({
   particleCount,

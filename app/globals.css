@@ -1,6 +1,88 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-background: #000000;
+  --color-background-secondary: #0a0a0a;
+  --color-background-tertiary: #141414;
+
+  --color-foreground: #ffffff;
+  --color-foreground-secondary: #e5e5e5;
+  --color-foreground-tertiary: #a3a3a3;
+
+  --color-accent: var(--accent-default);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
+
+  --color-border: #262626;
+  --color-border-light: #404040;
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  --text-hero: clamp(3rem, 8vw, 7rem);
+  --text-hero--line-height: 1.1;
+  --text-hero--letter-spacing: -0.02em;
+  --text-section: clamp(2rem, 5vw, 4rem);
+  --text-section--line-height: 1.2;
+  --text-section--letter-spacing: -0.01em;
+  --text-subsection: clamp(1.5rem, 3vw, 2.5rem);
+  --text-subsection--line-height: 1.3;
+
+  --animate-fade-in: fadeIn 0.8s ease-out forwards;
+  --animate-slide-up: slideUp 0.8s ease-out forwards;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes slideUp {
+    0% {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes glow {
+    0% {
+      box-shadow: 0 0 20px var(--glow-light);
+    }
+    100% {
+      box-shadow: 0 0 40px var(--glow-strong);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 :root {
   --background: #000000;
