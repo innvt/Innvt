@@ -1,7 +1,11 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Horizon — Innvt',
+  description: 'Building beyond our known frontier. Transcending our own systems to explore the infinite.',
+};
 
 export default function HorizonPage() {
   return (
@@ -37,4 +41,3 @@ export default function HorizonPage() {
     </main>
   );
 }
-

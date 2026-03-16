@@ -1,7 +1,11 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Symbiosis — Innvt',
+  description: 'Engineering the system for a thriving world. A self-sustaining ecosystem of perfect balance and mutual benefit.',
+};
 
 export default function SymbiosisPage() {
   return (
@@ -38,4 +42,3 @@ export default function SymbiosisPage() {
     </main>
   );
 }
-

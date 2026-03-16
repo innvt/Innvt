@@ -1,7 +1,11 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Cultivation — Innvt',
+  description: 'Creating the environment for potential. Forging the connections that empower others to build their own tools.',
+};
 
 export default function CultivationPage() {
   return (
@@ -38,4 +42,3 @@ export default function CultivationPage() {
     </main>
   );
 }
-

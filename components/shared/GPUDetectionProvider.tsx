@@ -81,15 +81,16 @@ export function GPUDetectionProvider({ children }: GPUDetectionProviderProps) {
   useEffect(() => {
     function handleQualityAdjusted(event: Event) {
       const customEvent = event as CustomEvent;
-      const { newTier, reason } = customEvent.detail;
-      
+      const detail = customEvent.detail;
+      if (!detail || typeof detail.newTier === 'undefined') return;
+
       // Update quality settings
       const newSettings = getQualitySettings();
       setQualitySettings(newSettings);
-      
+
       // Show notification to user (optional)
       if (process.env.NODE_ENV === 'development') {
-        console.log(`🎮 Quality adjusted to Tier ${newTier} (${reason})`);
+        console.log(`🎮 Quality adjusted to Tier ${detail.newTier} (${detail.reason})`);
       }
     }
 
@@ -114,38 +115,4 @@ export function GPUDetectionProvider({ children }: GPUDetectionProviderProps) {
   );
 }
 
-/**
- * Loading fallback component
- */
-export function GPUDetectionLoading() {
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-background z-50">
-      <div className="text-center">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
-        <p className="mt-4 text-foreground-secondary">Initializing...</p>
-      </div>
-    </div>
-  );
-}
-
-/**
- * 2D Fallback component for devices that can't handle WebGL
- */
-export function Fallback2D() {
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-background">
-      <div className="text-center max-w-md px-4">
-        <h2 className="text-2xl font-bold mb-4">
-          <span className="gradient-text">Innvt</span>
-        </h2>
-        <p className="text-foreground-secondary mb-4">
-          Your device doesn&apos;t support the full 3D experience.
-        </p>
-        <p className="text-sm text-foreground-secondary">
-          For the best experience, please visit on a device with WebGL support.
-        </p>
-      </div>
-    </div>
-  );
-}
 

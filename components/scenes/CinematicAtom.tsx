@@ -11,6 +11,7 @@ import {
   OrbitPath,
   ProceduralElectron,
 } from '@/lib/orbital-components';
+import { CINEMATIC_ORBIT_CONFIG } from '@/lib/scene-constants';
 
 interface CinematicAtomProps extends SceneProps {
   gpuTier?: number;
@@ -20,14 +21,8 @@ interface CinematicAtomProps extends SceneProps {
   molecularNodes?: THREE.Vector3[];
 }
 
-// ─── Orbit Configuration ────────────────────────────────────────────────────
-const ORBIT_CONFIG: OrbitConfig[] = [
-  { a: 2.5, b: 2.0, tiltX: 0.3,  tiltY: 0.0,  tiltZ: 0.1,  speed: 1.2, trail: 0.65 },
-  { a: 3.2, b: 2.8, tiltX: -0.5, tiltY: 0.4,  tiltZ: -0.2, speed: 0.9, trail: 0.6 },
-  { a: 4.0, b: 3.0, tiltX: 1.2,  tiltY: -0.3, tiltZ: 0.5,  speed: 0.75, trail: 0.55 },
-  { a: 3.5, b: 3.2, tiltX: -0.8, tiltY: 0.7,  tiltZ: -0.4, speed: 1.0, trail: 0.6 },
-  { a: 4.5, b: 3.5, tiltX: 0.6,  tiltY: -0.6, tiltZ: 0.3,  speed: 0.65, trail: 0.5 },
-];
+// ─── Orbit Configuration (from shared constants) ────────────────────────────
+const ORBIT_CONFIG: OrbitConfig[] = CINEMATIC_ORBIT_CONFIG;
 
 // ─── Nucleus Glow Corona (Billboard with wisps + streaks) ───────────────────
 function NucleusGlow({ opacityRef }: { opacityRef: MutableRefObject<number> }) {
@@ -222,14 +217,10 @@ function ProceduralNucleus({ opacityRef }: { opacityRef: MutableRefObject<number
 
 // ─── Main Component ─────────────────────────────────────────────────────────
 export default function CinematicAtom({
-  particleCount: _particleCount,
-  isActive: _isActive,
   transitionProgress = 1,
   transitionProgressRef,
   nextTransitionProgressRef,
-  gpuTier: _gpuTier,
   nextTransitionProgress = 0,
-  molecularNodes: _molecularNodes,
 }: CinematicAtomProps) {
   const groupRef = useRef<THREE.Group>(null);
   const opacityRef = useRef(0);

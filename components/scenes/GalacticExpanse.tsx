@@ -48,14 +48,11 @@ function pointOnEdge(
 }
 
 export default function GalacticExpanse({
-  particleCount: _particleCount,
-  isActive: _isActive,
+  particleCount,
   transitionProgress = 0,
   transitionProgressRef,
   nextTransitionProgressRef,
-  galaxyNodes: _galaxyNodes = [],
   nextTransitionProgress = 0,
-  nextTargets: _nextTargets = [],
 }: GalacticExpanseProps) {
   const groupRef = useRef<THREE.Group>(null);
   const galaxyGroupRef = useRef<THREE.Group>(null);
@@ -67,7 +64,7 @@ export default function GalacticExpanse({
 
   // ─── Spiral Disk Particles ───────────────────────────────────────────────
   const diskData = useMemo(() => {
-    const count = Math.max(_particleCount, 50000);
+    const count = Math.max(particleCount, 50000);
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
     const siz = new Float32Array(count);
@@ -134,7 +131,7 @@ export default function GalacticExpanse({
     }
 
     return { pos, col, siz, rnd, count };
-  }, [_particleCount]);
+  }, [particleCount]);
 
   // ─── Tree Morph Targets (abstract geometric tree) ─────────────────────────
   const treeData = useMemo(() => {

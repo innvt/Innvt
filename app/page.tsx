@@ -70,7 +70,7 @@ export default function Home() {
     let rafId: number;
 
     const snapToNearest = () => {
-      const lenis = (window as any).__lenis;
+      const lenis = window.__lenis;
       if (!lenis || isSnapping) return;
 
       const scrollY = lenis.scroll;
@@ -101,7 +101,7 @@ export default function Home() {
 
     // Poll Lenis velocity — when scrolling stops, snap
     const tick = () => {
-      const lenis = (window as any).__lenis;
+      const lenis = window.__lenis;
       if (lenis) {
         const scrolling = Math.abs(lenis.velocity) > 0.1;
         if (wasScrolling && !scrolling && !isSnapping) {

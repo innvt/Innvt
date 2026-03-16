@@ -31,7 +31,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     });
 
     // Expose globally so other components can stop/start during snaps
-    (window as any).__lenis = lenis;
+    window.__lenis = lenis;
 
     // Connect Lenis with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
@@ -75,7 +75,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     // Cleanup
     return () => {
       clearTimeout(saveTimeout);
-      (window as any).__lenis = null;
+      window.__lenis = null;
       gsap.ticker.remove(tickerCallback);
       lenis.destroy();
     };

@@ -213,7 +213,9 @@ export function getQualitySettings(): QualitySettings {
  */
 export function setQualityTier(tier: QualityTier): void {
   cachedQualitySettings = QUALITY_PRESETS[tier];
-  console.log(`🎮 Quality tier manually set to: ${tier}`);
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`🎮 Quality tier manually set to: ${tier}`);
+  }
 }
 
 /**
@@ -229,22 +231,6 @@ export function isWebGLSupported(): boolean {
   } catch {
     return false;
   }
-}
-
-/**
- * Get recommended particle count for a specific scale
- */
-export function getParticleCount(scale: keyof QualitySettings['particleCount']): number {
-  const settings = getQualitySettings();
-  return settings.particleCount[scale];
-}
-
-/**
- * Check if post-processing should be enabled
- */
-export function shouldEnablePostProcessing(): boolean {
-  const settings = getQualitySettings();
-  return settings.postProcessing;
 }
 
 /**

@@ -1,7 +1,11 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Genesis — Innvt',
+  description: 'Architecting the tools for a new reality. The Origin; the creation of the first spark; igniting the core in the void.',
+};
 
 export default function GenesisPage() {
   return (
@@ -38,4 +42,3 @@ export default function GenesisPage() {
     </main>
   );
 }
-

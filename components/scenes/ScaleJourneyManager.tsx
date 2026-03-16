@@ -93,7 +93,7 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
   }, [qualitySettings.particleCount.quantum, qualitySettings.atomCount]);
 
   // Generate targets (stable across renders)
-  const molecularData = useMemo(() => generateMolecularTargets(), []);
+  const molecularNodes = useMemo(() => generateMolecularTargets(), []);
   const solarNodes = useMemo(() => generateSolarTargets(), []);
   const galaxyNodes = useMemo(() => generateGalacticTargets(), []);
 
@@ -322,7 +322,7 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
             transitionProgressRef={atomicTransRef}
             nextTransitionProgressRef={atomicNextRef}
             gpuTier={qualitySettings.tier}
-            molecularNodes={molecularData.flat}
+            molecularNodes={molecularNodes}
             nextTransitionProgress={0}
           />
         </Suspense>
@@ -337,8 +337,8 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
             transitionProgress={0}
             transitionProgressRef={molecularTransRef}
             nextTransitionProgressRef={molecularNextRef}
-            molecules={molecularData.molecules}
-            nodes={molecularData.flat}
+            molecules={[]}
+            nodes={molecularNodes}
             nextTransitionProgress={0}
             nextTargets={solarNodes}
           />

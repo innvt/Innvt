@@ -308,15 +308,10 @@ interface MolecularNetworkProps extends SceneProps {
 
 // ─── Main Component ─────────────────────────────────────────────────────────
 export default function MolecularNetwork({
-  particleCount: _particleCount,
-  isActive: _isActive,
   transitionProgress = 0,
   transitionProgressRef,
   nextTransitionProgressRef,
-  molecules: _molecules,
-  nodes: _nodes,
   nextTransitionProgress = 0,
-  nextTargets: _nextTargets,
 }: MolecularNetworkProps) {
   const groupRef = useRef<THREE.Group>(null);
   const opacityRef = useRef(0);

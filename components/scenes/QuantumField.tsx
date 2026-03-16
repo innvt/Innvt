@@ -170,7 +170,7 @@ interface QuantumFieldProps extends SceneProps {
   };
 }
 
-export function QuantumField({ particleCount, isActive: _isActive, transitionProgress = 0, transitionProgressRef, morphTargets }: QuantumFieldProps) {
+export function QuantumField({ particleCount, transitionProgress = 0, transitionProgressRef, morphTargets }: QuantumFieldProps) {
   const pointsRef = useRef<THREE.Points>(null);
 
   // Create geometry with initial positions and random offsets
@@ -221,7 +221,9 @@ export function QuantumField({ particleCount, isActive: _isActive, transitionPro
   useEffect(() => {
     if (!morphTargets || !geometry) return;
 
-    console.log('[QuantumField] Setting morph targets for particle morphing');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[QuantumField] Setting morph targets for particle morphing');
+    }
 
     geometry.setAttribute('aTargetPosition', new THREE.BufferAttribute(morphTargets.targetPositions, 3));
     geometry.setAttribute('aTargetType', new THREE.BufferAttribute(morphTargets.targetTypes, 1));

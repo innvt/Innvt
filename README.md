@@ -18,7 +18,6 @@ A futuristic, visually stunning brand experience website built with Next.js 15, 
 ### Animation
 - **GSAP 3** — Professional-grade animation library
 - **ScrollTrigger** — Scroll-driven transitions between scales
-- **Framer Motion** — React animation library for UI elements
 
 ### Smooth Scrolling
 - **Lenis** — Smooth scroll library with scroll position persistence
@@ -49,11 +48,9 @@ innvt-website/
 │   │   ├── ScaleJourneyManager.tsx  # Orchestrates all transitions via ScrollTrigger
 │   │   ├── QuantumField.tsx         # Scale 1: Quantum fluctuations (Hero)
 │   │   ├── CinematicAtom.tsx        # Scale 2: Single Bohr atom (transition)
-│   │   ├── AtomicDanceMulti.tsx     # Scale 2: Multi-atom dance (Phase 1)
 │   │   ├── MolecularNetwork.tsx     # Scale 3: Molecular bonds (Phase 2)
 │   │   ├── OrbitalHarmony.tsx       # Scale 4: Solar system (Phase 3)
 │   │   ├── GalacticExpanse.tsx      # Scale 5: Spiral galaxy → tree morph (Phase 4)
-│   │   ├── CosmicWeb.tsx            # Scale 6: Cosmic web (Belief)
 │   │   └── types.ts                 # Shared TypeScript types
 │   └── shared/
 │       ├── SmoothScroll.tsx         # Lenis wrapper with scroll restoration
@@ -78,11 +75,10 @@ The homepage features a continuous scroll-driven journey through 6 scales of the
 | Scale | Scene | Description |
 |-------|-------|-------------|
 | **1. Quantum Field** | `QuantumField.tsx` | Planck-scale fluctuations — particles fade out on scroll transition |
-| **2. Atomic Dance** | `CinematicAtom.tsx` → `AtomicDanceMulti.tsx` | Bohr model atoms with orbiting electrons |
+| **2. Atomic Dance** | `CinematicAtom.tsx` | Bohr model atom with orbiting electrons |
 | **3. Molecular Network** | `MolecularNetwork.tsx` | Atoms bonding into complex molecular structures |
 | **4. Solar System** | `OrbitalHarmony.tsx` | Planetary orbits with rings, moons, and sun corona (30° viewing angle) |
 | **5. Galactic Expanse** | `GalacticExpanse.tsx` | Spiral galaxy that morphs into a rounded deciduous tree |
-| **6. Cosmic Web** | `CosmicWeb.tsx` | Large-scale structure of the universe |
 
 ### Key Technical Features
 - **Particle morphing**: Staggered `smoothstep` per particle using seeded random offsets for organic transitions
@@ -171,13 +167,13 @@ The project can be deployed to any platform that supports Next.js:
 - Use TypeScript for type safety
 - Keep components small and focused
 - Separate 3D (canvas) and 2D (dom) components
-- Use GSAP for scroll-driven animations, Framer Motion for UI animations
+- Use GSAP for scroll-driven animations
 - Always clean up animations and event listeners in useEffect
 - Use refs (not React state) for high-frequency animation values
 
 ## License
 
-Copyright © 2025 Innvt. All rights reserved.
+Copyright © 2025–2026 Innvt. All rights reserved.
 
 ---
 

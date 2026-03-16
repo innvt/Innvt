@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-
 /**
  * Solar System Configuration
  * Scaled to fit within camera view at z=30 (FOV 75°).
@@ -27,6 +25,28 @@ export interface PlanetConfig {
     ringColor?: string;
 }
 
+/**
+ * Orbit configuration for CinematicAtom electron orbits.
+ * Each orbit defines an ellipse (a, b), tilts, speed, and trail opacity.
+ */
+export interface OrbitConfigEntry {
+  a: number;
+  b: number;
+  tiltX: number;
+  tiltY: number;
+  tiltZ: number;
+  speed: number;
+  trail: number;
+}
+
+export const CINEMATIC_ORBIT_CONFIG: OrbitConfigEntry[] = [
+  { a: 2.5, b: 2.0, tiltX: 0.3,  tiltY: 0.0,  tiltZ: 0.1,  speed: 1.2, trail: 0.65 },
+  { a: 3.2, b: 2.8, tiltX: -0.5, tiltY: 0.4,  tiltZ: -0.2, speed: 0.9, trail: 0.6 },
+  { a: 4.0, b: 3.0, tiltX: 1.2,  tiltY: -0.3, tiltZ: 0.5,  speed: 0.75, trail: 0.55 },
+  { a: 3.5, b: 3.2, tiltX: -0.8, tiltY: 0.7,  tiltZ: -0.4, speed: 1.0, trail: 0.6 },
+  { a: 4.5, b: 3.5, tiltX: 0.6,  tiltY: -0.6, tiltZ: 0.3,  speed: 0.65, trail: 0.5 },
+];
+
 export const SOLAR_SYSTEM_CONFIG: PlanetConfig[] = [
     // rotationSpeed scaled proportionally: Jupiter (9.9h) fastest, Venus (243d) slowest
     // Real ratios preserved: Jupiter > Saturn > Neptune > Uranus > Earth ≈ Mars >> Mercury >> Pluto >> Venus
@@ -41,16 +61,3 @@ export const SOLAR_SYSTEM_CONFIG: PlanetConfig[] = [
     { name: 'Pluto', radius: 0.25, distance: 78.0, speed: 0.08, color: '#534437', eccentricity: 0.10, roughness: 0.9, metalness: 0.05, emissiveIntensity: 0.01, rotationSpeed: 0.3, hasAtmosphere: true, atmosphereColor: '#6688CC', atmosphereThickness: 1.15, atmospherePower: 5.0, atmosphereDensity: 0.15 },
 ];
 
-/**
- * Galactic Expanse Configuration
- * Source of truth for galaxy spiral generation.
- */
-export const GALAXY_CONFIG = {
-    arms: 3,
-    armWidth: 0.5,
-    coreRadius: 2.0,
-    galaxyRadius: 30.0,
-    colorInside: new THREE.Color('#ff6030'),
-    colorOutside: new THREE.Color('#1b3984'),
-    particleCount: 10000,
-};

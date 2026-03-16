@@ -139,7 +139,7 @@ export const ELEMENT_CONFIGS: Record<string, ElementConfig> = {
 /**
  * Get a random element based on distribution weights
  */
-export function getRandomElement(): ElementConfig {
+function getRandomElement(): ElementConfig {
   const elements = Object.values(ELEMENT_CONFIGS);
   const totalWeight = elements.reduce((sum, el) => sum + el.weight, 0);
   

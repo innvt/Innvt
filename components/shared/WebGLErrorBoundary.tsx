@@ -32,6 +32,10 @@ export class WebGLErrorBoundary extends Component<Props, State> {
     }
   }
 
+  private handleRetry = () => {
+    this.setState({ hasError: false, error: null });
+  };
+
   render() {
     if (this.state.hasError) {
       return (
@@ -40,9 +44,20 @@ export class WebGLErrorBoundary extends Component<Props, State> {
             <h2 className="text-xl font-bold mb-3 gradient-gold">
               Visual Experience Unavailable
             </h2>
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-neutral-400 mb-4">
               The 3D experience encountered an issue. The site content is still fully accessible below.
             </p>
+            {process.env.NODE_ENV === 'development' && this.state.error && (
+              <pre className="text-xs text-red-400 bg-neutral-900 rounded p-3 mb-4 text-left overflow-auto max-h-32">
+                {this.state.error.message}
+              </pre>
+            )}
+            <button
+              onClick={this.handleRetry}
+              className="px-4 py-2 text-sm rounded border border-neutral-600 text-neutral-300 hover:border-neutral-400 hover:text-neutral-100 transition-colors"
+            >
+              Try Again
+            </button>
           </div>
         </div>
       );

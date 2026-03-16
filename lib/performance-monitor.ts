@@ -171,9 +171,11 @@ class PerformanceMonitor {
       ? 'Critical performance issue detected'
       : 'Performance below target';
 
-    console.warn(
-      `⚠️ ${reasonText}. Reducing quality from Tier ${currentSettings.tier} to Tier ${newTier}`
-    );
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        `⚠️ ${reasonText}. Reducing quality from Tier ${currentSettings.tier} to Tier ${newTier}`
+      );
+    }
 
     // Dispatch custom event for UI notification
     if (typeof window !== 'undefined') {
@@ -221,17 +223,4 @@ class PerformanceMonitor {
 // Singleton instance
 export const performanceMonitor = new PerformanceMonitor();
 
-/**
- * React hook for performance monitoring
- */
-export function usePerformanceMonitor() {
-  return {
-    start: () => performanceMonitor.start(),
-    stop: () => performanceMonitor.stop(),
-    update: (deltaTime: number) => performanceMonitor.update(deltaTime),
-    getMetrics: () => performanceMonitor.getMetrics(),
-    logSummary: () => performanceMonitor.logSummary(),
-    reset: () => performanceMonitor.reset(),
-  };
-}
 
