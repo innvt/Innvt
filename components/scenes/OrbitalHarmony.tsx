@@ -435,32 +435,10 @@ const EDGE_FADE_GLSL = `
   float edgeFade = smoothstep(0.0, 0.15, mu);
 `;
 
-// ─── Mercury — Cratered Grey World ──────────────────────────────────────────
-function MercuryPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader()}
-        fragmentShader={`
+// ─── Planet Fragment Shaders ─────────────────────────────────────────────────
+// Each planet's unique fragment shader body, extracted verbatim.
+const PLANET_FRAGMENT_SHADERS: Record<string, string> = {
+  Mercury: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -490,38 +468,8 @@ function MercuryPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRe
 
             gl_FragColor = vec4(color, uOpacity * edgeFade);
           }
-        `}
-      />
-    </mesh>
-  );
-}
-
-// ─── Venus — Glowing Cloud Sphere ───────────────────────────────────────────
-function VenusPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader()}
-        fragmentShader={`
+        `,
+  Venus: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -551,38 +499,8 @@ function VenusPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef:
 
             gl_FragColor = vec4(color, uOpacity * edgeFade);
           }
-        `}
-      />
-    </mesh>
-  );
-}
-
-// ─── Earth — The Showcase ───────────────────────────────────────────────────
-function EarthPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader()}
-        fragmentShader={`
+        `,
+  Earth: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -633,38 +551,8 @@ function EarthPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef:
 
             gl_FragColor = vec4(surface, uOpacity * edgeFade);
           }
-        `}
-      />
-    </mesh>
-  );
-}
-
-// ─── Mars — Red Desert ──────────────────────────────────────────────────────
-function MarsPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader()}
-        fragmentShader={`
+        `,
+  Mars: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -697,38 +585,8 @@ function MarsPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: 
 
             gl_FragColor = vec4(color, uOpacity * edgeFade);
           }
-        `}
-      />
-    </mesh>
-  );
-}
-
-// ─── Jupiter — The Showpiece ────────────────────────────────────────────────
-function JupiterPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader(config.oblateness || 0)}
-        fragmentShader={`
+        `,
+  Jupiter: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -770,38 +628,8 @@ function JupiterPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRe
 
             gl_FragColor = vec4(color, uOpacity * edgeFade);
           }
-        `}
-      />
-    </mesh>
-  );
-}
-
-// ─── Saturn — Elegant Gas Giant ─────────────────────────────────────────────
-function SaturnPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader(config.oblateness || 0)}
-        fragmentShader={`
+        `,
+  Saturn: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -834,38 +662,8 @@ function SaturnPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef
 
             gl_FragColor = vec4(color, uOpacity * edgeFade);
           }
-        `}
-      />
-    </mesh>
-  );
-}
-
-// ─── Uranus — The Tilted Ice Giant ──────────────────────────────────────────
-function UranusPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader(config.oblateness || 0)}
-        fragmentShader={`
+        `,
+  Uranus: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -895,38 +693,8 @@ function UranusPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef
 
             gl_FragColor = vec4(baseColor, uOpacity * edgeFade);
           }
-        `}
-      />
-    </mesh>
-  );
-}
-
-// ─── Neptune — The Windy Blue Giant ─────────────────────────────────────────
-function NeptunePlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader(config.oblateness || 0)}
-        fragmentShader={`
+        `,
+  Neptune: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -969,38 +737,8 @@ function NeptunePlanet({ config, opacityRef }: { config: PlanetConfig; opacityRe
 
             gl_FragColor = vec4(color, uOpacity * edgeFade);
           }
-        `}
-      />
-    </mesh>
-  );
-}
-
-// ─── Pluto — The Heart World ────────────────────────────────────────────────
-function PlutoPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 1 },
-    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
-  }), []);
-
-  useFrame((state) => {
-    if (matRef.current) {
-      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      matRef.current.uniforms.uOpacity.value = opacityRef.current;
-    }
-  });
-
-  return (
-    <mesh>
-      <sphereGeometry args={[config.radius, 48, 48]} />
-      <shaderMaterial
-        ref={matRef}
-        transparent
-        depthWrite
-        uniforms={uniforms}
-        vertexShader={planetVertexShader()}
-        fragmentShader={`
+        `,
+  Pluto: `
           ${NOISE_GLSL}
           uniform float uTime;
           uniform float uOpacity;
@@ -1040,7 +778,44 @@ function PlutoPlanet({ config, opacityRef }: { config: PlanetConfig; opacityRef:
 
             gl_FragColor = vec4(color, uOpacity * edgeFade);
           }
-        `}
+        `,
+};
+
+// ─── Shared Shader Planet Component ─────────────────────────────────────────
+// Replaces 9 individual planet components with a single reusable one.
+function ShaderPlanet({
+  config,
+  opacityRef,
+  fragmentShader,
+}: {
+  config: PlanetConfig;
+  opacityRef: MutableRefObject<number>;
+  fragmentShader: string;
+}) {
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+  const uniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uOpacity: { value: 1 },
+    uSunDir: { value: new THREE.Vector3(1, 0.3, 0.5).normalize() },
+  }), []);
+
+  useFrame((state) => {
+    if (matRef.current) {
+      matRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+      matRef.current.uniforms.uOpacity.value = opacityRef.current;
+    }
+  });
+
+  return (
+    <mesh>
+      <sphereGeometry args={[config.radius, 48, 48]} />
+      <shaderMaterial
+        ref={matRef}
+        transparent
+        depthWrite
+        uniforms={uniforms}
+        vertexShader={planetVertexShader(config.oblateness || 0)}
+        fragmentShader={fragmentShader}
       />
     </mesh>
   );
@@ -1246,18 +1021,11 @@ function Starfield({ opacityRef, count = 3000 }: { opacityRef: MutableRefObject<
 
 // ─── Planet Dispatcher ──────────────────────────────────────────────────────
 function PlanetBody({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
-  switch (config.name) {
-    case 'Mercury': return <MercuryPlanet config={config} opacityRef={opacityRef} />;
-    case 'Venus': return <VenusPlanet config={config} opacityRef={opacityRef} />;
-    case 'Earth': return <EarthPlanet config={config} opacityRef={opacityRef} />;
-    case 'Mars': return <MarsPlanet config={config} opacityRef={opacityRef} />;
-    case 'Jupiter': return <JupiterPlanet config={config} opacityRef={opacityRef} />;
-    case 'Saturn': return <SaturnPlanet config={config} opacityRef={opacityRef} />;
-    case 'Uranus': return <UranusPlanet config={config} opacityRef={opacityRef} />;
-    case 'Neptune': return <NeptunePlanet config={config} opacityRef={opacityRef} />;
-    case 'Pluto': return <PlutoPlanet config={config} opacityRef={opacityRef} />;
-    default: return <PlanetBodyDefault config={config} opacityRef={opacityRef} />;
+  const fragmentShader = PLANET_FRAGMENT_SHADERS[config.name];
+  if (fragmentShader) {
+    return <ShaderPlanet config={config} opacityRef={opacityRef} fragmentShader={fragmentShader} />;
   }
+  return <PlanetBodyDefault config={config} opacityRef={opacityRef} />;
 }
 
 function PlanetBodyDefault({ config, opacityRef }: { config: PlanetConfig; opacityRef: MutableRefObject<number> }) {
