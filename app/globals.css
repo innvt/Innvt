@@ -192,18 +192,6 @@ body {
   box-shadow: 0 0 20px var(--glow-light);
 }
 
-/* Loading state */
-.loading {
-  opacity: 0;
-  animation: fadeIn 0.8s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
 /* Respect user preference for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,

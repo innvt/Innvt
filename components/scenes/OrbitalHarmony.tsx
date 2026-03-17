@@ -8,9 +8,7 @@ import { SOLAR_SYSTEM_CONFIG, PlanetConfig } from '@/lib/scene-constants';
 import { NOISE_GLSL } from '@/lib/shaders/noise.glsl';
 
 interface OrbitalHarmonyProps extends SceneProps {
-  solarSystemNodes?: THREE.Vector3[];
   nextTransitionProgress?: number;
-  nextTargets?: THREE.Vector3[];
   transitionProgressRef?: MutableRefObject<number>;
   nextTransitionProgressRef?: MutableRefObject<number>;
 }

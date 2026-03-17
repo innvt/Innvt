@@ -28,9 +28,6 @@ import { getQualitySettings } from '@/lib/gpu-detection';
 import {
   assignParticlesToAtoms,
   particleTargetsToAttributes,
-  generateMolecularTargets,
-  generateSolarTargets,
-  generateGalacticTargets,
   type AtomMorphConfig,
 } from '@/lib/particle-morphing';
 import { generateAtomPositions } from '@/lib/atomic-elements';
@@ -91,11 +88,6 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
     );
     return { quantumToAtomicAttributes: particleTargetsToAttributes(particleTargets) };
   }, [qualitySettings.particleCount.quantum, qualitySettings.atomCount]);
-
-  // Generate targets (stable across renders)
-  const molecularNodes = useMemo(() => generateMolecularTargets(), []);
-  const solarNodes = useMemo(() => generateSolarTargets(), []);
-  const galaxyNodes = useMemo(() => generateGalacticTargets(), []);
 
   // Re-create ScrollTriggers when Lenis re-initializes (e.g. after back navigation)
   const [triggerKey, setTriggerKey] = useState(0);
@@ -320,8 +312,6 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
             transitionProgress={0}
             transitionProgressRef={atomicTransRef}
             nextTransitionProgressRef={atomicNextRef}
-            gpuTier={qualitySettings.tier}
-            molecularNodes={molecularNodes}
             nextTransitionProgress={0}
           />
         </Suspense>
@@ -336,10 +326,7 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
             transitionProgress={0}
             transitionProgressRef={molecularTransRef}
             nextTransitionProgressRef={molecularNextRef}
-            molecules={[]}
-            nodes={molecularNodes}
             nextTransitionProgress={0}
-            nextTargets={solarNodes}
           />
         </Suspense>
       </group>
@@ -353,9 +340,7 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
             transitionProgress={0}
             transitionProgressRef={solarTransRef}
             nextTransitionProgressRef={solarNextRef}
-            solarSystemNodes={solarNodes}
             nextTransitionProgress={0}
-            nextTargets={galaxyNodes}
           />
         </Suspense>
       </group>
@@ -369,9 +354,7 @@ export function ScaleJourneyManager({ enableTransitions = true }: ScaleJourneyMa
             transitionProgress={0}
             transitionProgressRef={galacticTransRef}
             nextTransitionProgressRef={galacticNextRef}
-            galaxyNodes={galaxyNodes}
             nextTransitionProgress={0}
-            nextTargets={[]}
           />
         </Suspense>
       </group>

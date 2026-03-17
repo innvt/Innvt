@@ -131,7 +131,7 @@ class PerformanceMonitor {
   private checkPerformance(): void {
     // Don't adjust if we're in cooldown
     const now = performance.now();
-    if (now - this.qualityAdjustmentCooldown < this.cooldownDuration) {
+    if (this.qualityAdjustmentCooldown > 0 && now - this.qualityAdjustmentCooldown < this.cooldownDuration) {
       return;
     }
 

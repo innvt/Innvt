@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useMemo, type MutableRefObject } from 'react';
+import { useRef, useMemo, useEffect, type MutableRefObject } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { SceneProps } from './types';
@@ -282,6 +282,13 @@ function MoleculeBond({
     return new THREE.Line(geom, mat);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      lineObj.geometry.dispose();
+      (lineObj.material as THREE.Material).dispose();
+    };
+  }, [lineObj]);
+
   useFrame(() => {
     const positions = lineObj.geometry.attributes.position as THREE.BufferAttribute;
     positions.setXYZ(0, startRef.current.x, startRef.current.y, startRef.current.z);
@@ -298,10 +305,7 @@ function MoleculeBond({
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 interface MolecularNetworkProps extends SceneProps {
-  molecules?: unknown[];
-  nodes?: THREE.Vector3[];
   nextTransitionProgress?: number;
-  nextTargets?: THREE.Vector3[];
   transitionProgressRef?: MutableRefObject<number>;
   nextTransitionProgressRef?: MutableRefObject<number>;
 }

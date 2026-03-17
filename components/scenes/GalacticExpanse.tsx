@@ -6,9 +6,7 @@ import * as THREE from 'three';
 import { SceneProps } from './types';
 
 interface GalacticExpanseProps extends SceneProps {
-  galaxyNodes?: THREE.Vector3[];
   nextTransitionProgress?: number;
-  nextTargets?: THREE.Vector3[];
   transitionProgressRef?: MutableRefObject<number>;
   nextTransitionProgressRef?: MutableRefObject<number>;
 }

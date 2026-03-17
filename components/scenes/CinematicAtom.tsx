@@ -14,11 +14,9 @@ import {
 import { CINEMATIC_ORBIT_CONFIG } from '@/lib/scene-constants';
 
 interface CinematicAtomProps extends SceneProps {
-  gpuTier?: number;
   nextTransitionProgress?: number;
   transitionProgressRef?: MutableRefObject<number>;
   nextTransitionProgressRef?: MutableRefObject<number>;
-  molecularNodes?: THREE.Vector3[];
 }
 
 // ─── Orbit Configuration (from shared constants) ────────────────────────────
